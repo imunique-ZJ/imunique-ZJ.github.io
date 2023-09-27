@@ -9,7 +9,7 @@
                         <key>kind</key>
                         <string>software-package</string>
                         <key>url</key>
-                        <string>http://ci-zj.ddns.net:9080/ios-ipa-download/ms.ipa</string>
+                        <string>https://ci-zj.ddns.net:9443/ios-ipa-download/ms.ipa</string>
                     </dict>
                     <dict>
                         <key>kind</key>
