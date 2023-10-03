@@ -1,15 +1,119 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <meta http-equiv="cache-control" content="max-age=0"/>
-    <meta http-equiv="cache-control" content="no-cache"/>
-    <meta http-equiv="expires" content="0"/>
-    <meta http-equiv="pragma" content="no-cache"/>
-    <title>Download</title>
-</head>
-<body>
-<a href="itms-services://?action=download-manifest&amp;url=https://imunique-ZJ.github.io/ios-ipa-download/ms.plist">SIT Enterprise</a>
-</body>
+    <head>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700" type="text/css">
+        <meta charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <meta http-equiv="cache-control" content="max-age=0"/>
+        <meta http-equiv="cache-control" content="no-cache"/>
+        <meta http-equiv="expires" content="0"/>
+        <meta http-equiv="pragma" content="no-cache"/>
+        <link rel="stylesheet"
+              href="https://storage.googleapis.com/code.getmdl.io/1.0.4/material.deep_orange-indigo.min.css"/>
+        <script src="https://storage.googleapis.com/code.getmdl.io/1.0.4/material.min.js"></script>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons"/>
+        <title>M+ Download</title>
+
+        <style>
+            .demo-layout-waterfall .mdl-layout__header-row .mdl-navigation__link:last-of-type  {
+                padding-right: 0;
+            }
+
+            .panel_content {
+                padding: 8px;
+            }
+
+            div[id*="source_"] {
+                display: none;
+            }
+
+            .etc_func {
+                color: #0099cc;
+                cursor: pointer;
+                margin-left: 24px;
+            }
+
+        </style>
+
+        <script src="js/jquery-1.11.0.min.js"></script>
+        <script src="js/jquery.qrcode.min.js"></script>
+        <script src="js/markdown.min.js"></script>
+    </head>
+    <body>
+        <!-- Always shows a header, even in smaller screens. -->
+        <div class="demo-layout-waterfall mdl-layout mdl-js-layout mdl-layout--fixed-header">
+            <header class="mdl-layout__header">
+                <!-- Top row, always visible -->
+                <div class="mdl-layout__header-row">
+                    <!-- Title -->
+                    <span class="mdl-layout-title">M+ iOS Download</span>
+                    <!-- Add spacer, to align navigation to the right -->
+                    <div class="mdl-layout-spacer"></div>
+                </div>
+                <!-- Tabs -->
+                <div class="mdl-layout__tab-bar mdl-js-ripple-effect">
+                    <a href="#scroll-tab-1" class="mdl-layout__tab is-active">Staging</a>
+                    <a href="#scroll-tab-2" class="mdl-layout__tab">Staging Enterprise</a>
+                </div>
+            </header>
+            <main class="mdl-layout__content">
+                <section class="mdl-layout__tab-panel is-active panel_content" id="scroll-tab-1">
+                    <div id="source_staging" class="page-content">
+                        [20231002_M+_Dev_6.9.510](itms-services://?action=download-manifest&amp;url=https://ci-zj.ddns.net:9443/ios-ipa-download/mp69510-staging.plist)
+                    </div>
+                    <div id="result_staging" class="mdl-typography--title"></div>
+                </section>
+                <section class="mdl-layout__tab-panel panel_content" id="scroll-tab-2">
+                    <div id="source_staging_enterprise" class="page-content">
+                        [20231002_M+_E_Staging_Log_6.9.510](itms-services://?action=download-manifest&amp;url=https://ci-zj.ddns.net:9443/ios-ipa-download/mp69510-staging-enterprise.plist)
+                    </div>
+                    <div id="result_staging_enterprise" class="mdl-typography--title"></div>
+                </section>
+            </main>
+        </div>
+
+        <!-- init MarkDown editor -->
+        <script>
+            function Editor(source, preview) {
+                    this.update = function () {
+                            preview.innerHTML = markdown.toHTML(source.textContent.trim());
+                    };
+                    source.editor = this;
+                    this.update();
+            }
+            var $MD = function (id) { return document.getElementById(id); };
+            new Editor($MD("source_staging"), $MD("result_staging"));
+            new Editor($MD("source_staging_enterprise"), $MD("result_staging_enterprise"));
+        </script>
+
+        <!-- set link -->
+        <script>
+            $.each($('div[id*="result_"] > p'), function(index, element) {
+                $(this).addClass('mdl-typography--subhead');
+            });
+
+            $.each($('p > a[href*=".plist"'), function(index, element) {
+                var link = $(this);
+                // set qrcode
+                var newElement = $('<span class="etc_func mdl-typography--title mdl-layout--large-screen-only">[QRCode]</span>');
+                $(this).addClass('mdl-typography--subhead');
+                $(this).after(newElement);
+
+                $(newElement).bind('click', function() {
+                    var qrCode = $(newElement).find('canvas');
+                    if ($(qrCode).length == 0) {
+                        console.log("create QRCode");
+                        $(newElement).qrcode({
+                            width: 128,
+                            height: 128,
+                            text: $(link).attr('href')
+                        });
+                    } else {
+                        console.log("clear QRCode");
+                        $(qrCode).toggle();
+                    }
+                });
+            });
+        </script>
+    </body>
 </html>
